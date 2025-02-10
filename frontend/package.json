@@ -1,0 +1,34 @@
+{
+  "name": "todolist",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@heroicons/vue": "^2.2.0",
+    "@nuxtjs/axios": "^5.13.6",
+    "@pinia/nuxt": "^0.9.0",
+    "@vuepic/vue-datepicker": "^11.0.1",
+    "consola": "^3.4.0",
+    "core-js": "^3.25.3",
+    "flatpickr": "^4.6.13",
+    "nuxt": "^3.0.0",
+    "pinia": "^2.3.1",
+    "ufo": "^1.5.4",
+    "vue": "^3.0.0",
+    "vue-flatpickr-component": "^11.0.5",
+    "vue-server-renderer": "^2.7.10",
+    "vue-template-compiler": "^2.7.10",
+    "vue3-datepicker": "^0.4.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^5.3.5",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17"
+  }
+}
