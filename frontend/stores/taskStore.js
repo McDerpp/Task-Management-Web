@@ -28,7 +28,7 @@ export const useTaskStore = defineStore("taskStore", {
       if (task) task.content = newContent;
     },
 
-    toggleTask(taskId) {
+    toggleTask(taskContent, isDone = false, dateTime = null) {
       const task = this.tasks.find((task) => task.id === taskId);
       if (task) task.done = !task.done;
     },
@@ -49,6 +49,20 @@ export const useTaskStore = defineStore("taskStore", {
       } catch (error) {
         console.error("Error fetching subtasks for taskId:", error);
       }
+    },
+
+    addSubtasksToTask(subtasks) {
+      console.log("subtasks ->", subtasks);
+      if (!Array.isArray(subtasks)) return;
+
+      subtasks.forEach((subtask) => {
+        this.tasks.push({
+          id: subtask.id || Date.now(), // Use provided ID or generate one
+          content: subtask.content || "Untitled Subtask",
+          dateTime: subtask.dateTime || null,
+          done: subtask.done || false,
+        });
+      });
     },
   },
 });

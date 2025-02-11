@@ -9,7 +9,7 @@ class SubTask extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['task_id', 'title', 'completed'];
+    protected $fillable = ['task_id', 'title', 'completed','datetime'];
 
     public function task()
     {

@@ -1,12 +1,6 @@
 <template>
   <div class="create-new flex flex-wrap items-center gap-4 mb-8">
     <input
-      type="checkbox"
-      v-model="isChecked"
-      id="taskComplete"
-      class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-    />
-    <input
       type="text"
       v-model="newTask"
       placeholder="Add a new task"
@@ -46,6 +40,12 @@ export default {
       isChecked: false,
     };
   },
+  props: {
+    taskId: {
+      type: String,
+      required: true,
+    },
+  },
   methods: {
     handleBlurAddTask() {
       console.log("Task input blurred!");
@@ -57,11 +57,13 @@ export default {
       }
 
       try {
+        console.log("Task ID:", this.taskId);
+
         const taskData = {
           title: this.newTask,
           completed: this.isChecked,
           datetime: this.date,
-          task_id: 1, // You can adjust the task ID accordingly
+          task_id: this.taskId,
         };
 
         const response = await subtaskService.createSubTask(taskData);

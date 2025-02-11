@@ -15,10 +15,12 @@ export default {
     return apiClient.get(`/subtasks/task/${id}`);
   },
   createSubTask(data) {
+    console.log(data);
     return apiClient.post("/subtasks", data);
   },
   updateSubTask(id, data) {
-    return apiClient.put(`/subtasks/${id}`, data);
+    console.log(data);
+    return apiClient.patch(`/subtasks/${id}`, data);
   },
   deleteSubTask(id) {
     return apiClient.delete(`/subtasks/${id}`);
