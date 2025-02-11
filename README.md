@@ -1,3 +1,5 @@
+Video : https://drive.google.com/drive/folders/1IACvRIJvH6flAyQfpqWMAJQHYlYn9PSP?usp=sharing
+
 NOTE: to run this, change the DB_DATABASE in .env of the backend to the absolute path of "database.sqlite"(found in the database folder)
 
 [Development Still ongoing]
