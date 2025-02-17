@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import subtaskService from "../services/subtaskService";
+import taskservice from "../services/taskservice";
 export const useTaskStore = defineStore("taskStore", {
   state: () => ({
     tasks: [
@@ -41,11 +42,12 @@ export const useTaskStore = defineStore("taskStore", {
       this.tasks.sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
     },
 
-    async fetchSubTasksByTaskId(taskId) {
+    async fetchTask(taskId) {
       try {
-        const response = await subtaskService.getSubTasksByTaskID(taskId); // Get subtasks for the given taskId
-        this.tasks = response.data;
+        const response = await taskservice.getTaskByID(taskId);
+        this.tasks = response.data.sub_tasks;
         console.log(response.data);
+        return response.data;
       } catch (error) {
         console.error("Error fetching subtasks for taskId:", error);
       }

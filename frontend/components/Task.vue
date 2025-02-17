@@ -88,10 +88,10 @@ export default {
     async removeTask() {
       if (confirm("Are you sure you want to delete this task?")) {
         try {
-          // Remove from server first
+     
           await subtaskService.deleteSubTask(this.taskId);
 
-          // Remove from task store
+
           const taskStore = useTaskStore();
           taskStore.removeTask(this.taskId);
 

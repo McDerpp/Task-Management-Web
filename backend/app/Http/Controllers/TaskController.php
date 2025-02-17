@@ -14,13 +14,17 @@ class TaskController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $validated = $request->merge([
+            'title' => $request->input('title', 'Untitled Task'), // Default title
+            'color' => $request->input('color', 'white'), // Default color
+        ])->validate([
             'title' => 'required|string',
             'color' => 'nullable|string',
         ]);
-
+    
         return Task::create($validated);
     }
+    
 
     public function show(Task $task)
     {

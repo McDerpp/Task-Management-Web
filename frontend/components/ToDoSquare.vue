@@ -31,49 +31,43 @@
   </NuxtLink>
 </template>
 
-<script>
-export default {
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
-    color: {
-      type: String,
-      default: "blue",
-      required: true,
-    },
-    taskId: {
-      type: Number,
-      required: true,
-    },
-    subtask: {
-      type: Array,
-      default: () => [],
-    },
-  },
-  computed: {
-    limitedSubTasks() {
-      const today = new Date();
+<script setup>
+import { computed, onMounted } from "vue";
 
-      const sortedSubtasks = this.subtask
-        .filter((task) => task.datetime && new Date(task.datetime) >= today)
-        .sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+const props = defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
+  color: {
+    type: String,
+    default: "blue",
+  },
+  taskId: {
+    type: Number,
+    required: true,
+  },
+  subtask: {
+    type: Array,
+    default: () => [],
+  },
+});
 
-      return sortedSubtasks.length
-        ? sortedSubtasks.slice(0, 3)
-        : [{ title: " - " }, { title: " - " }, { title: " - " }];
-    },
-  },
-  methods: {
-    handleClick() {
-      console.log("taskId:", this.taskId);
-    },
-  },
-  created() {
-    console.log("Subtask List:", this.taskId);
-  },
-};
+const limitedSubTasks = computed(() => {
+  const today = new Date();
+
+  const sortedSubtasks = props.subtask
+    .filter((task) => task.datetime && new Date(task.datetime) >= today)
+    .sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
+  return sortedSubtasks.length
+    ? sortedSubtasks.slice(0, 3)
+    : [{ title: " - " }, { title: " - " }, { title: " - " }];
+});
+
+onMounted(() => {
+  console.log("Subtask List:", props.taskId);
+});
 </script>
 
 <style>

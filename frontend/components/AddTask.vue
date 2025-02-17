@@ -26,7 +26,7 @@
 
 <script>
 import FlatPickr from "vue-flatpickr-component";
-import { useTaskStore } from "../stores/taskStore"; // Import the Pinia store
+import { useTaskStore } from "../stores/taskStore"; 
 import subtaskService from "../services/subtaskService";
 
 export default {
@@ -76,7 +76,7 @@ export default {
           response.data.datetime
         );
 
-        // Reset form fields
+
         this.newTask = "";
         this.date = null;
         this.isChecked = false;

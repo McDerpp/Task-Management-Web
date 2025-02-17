@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Route;
 
 // Task Routes
 Route::apiResource('tasks', TaskController::class);
-Route::patch('/tasks/{task}', [TaskController::class, 'update']); 
-Route::delete('/tasks/{task}', [TaskController::class, 'destroy']); 
+Route::post('/tasks', [TaskController::class, 'store']);
+Route::patch('/tasks/{task}', [TaskController::class, 'update']);
+Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
+Route::get('/tasks/{task}', [TaskController::class, 'show']);
+
 
 // SubTask Routes
 Route::apiResource('subtasks', SubTaskController::class);

@@ -1,3 +1,80 @@
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import AddTask from "../components/AddTask.vue";
+import Task from "../components/Task.vue";
+import "flatpickr/dist/flatpickr.css";
+import { TrashIcon } from "@heroicons/vue/24/solid";
+import taskService from "@/services/taskService";
+import { useTaskStore } from "@/stores/taskStore";
+import taskservice from "../services/taskservice";
+
+const route = useRoute();
+const router = useRouter();
+const taskStore = useTaskStore();
+
+const taskId = ref(route.query.taskId);
+const tasks = computed(() => taskStore.tasks);
+const colors = ["red", "blue", "green", "yellow"];
+
+const taskColor = ref("white");
+const taskTitle = ref("Task Title Here");
+const taskID = ref(69);
+
+onMounted(async () => {
+  if (taskId.value) {
+    try {
+      const task = await taskStore.fetchTask(taskId.value);
+      taskColor.value = task.color;
+      taskTitle.value = task.title;
+      taskID.value = task.id;
+    } catch (error) {
+      console.error("Error fetching task: ", error);
+    }
+  } else {
+    const task = await taskservice.createTask();
+    console.log("creating task result ->", task);
+  }
+});
+
+const updateTaskTitle = async () => {
+  if (!taskId.value) {
+    console.warn("No taskId available for update");
+    return;
+  }
+  try {
+    const updatedData = {
+      title: taskTitle.value,
+      color: taskColor.value,
+    };
+    const response = await taskService.updateTask(taskId.value, updatedData);
+    console.log("Task updated successfully:", response.data);
+  } catch (error) {
+    console.error("Error updating task:", error);
+  }
+};
+
+const handleClick = (color) => {
+  taskColor.value = color;
+  updateTaskTitle();
+};
+
+const removeTask = async () => {
+  if (confirm("Are you sure you want to delete this task?")) {
+    try {
+      await taskService.deleteTask(taskId.value);
+      taskStore.tasks = taskStore.tasks.filter(
+        (task) => task.id !== taskId.value
+      );
+      console.log("Task deleted successfully");
+      router.push("/ToDoPage");
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  }
+};
+</script>
+
 <template>
   <div
     :class="`p-5 bg-${taskColor}-500 bg-opacity-35 h-screen overflow-y-auto`"
@@ -8,6 +85,7 @@
         v-model="taskTitle"
         placeholder="Title"
         @keypress.enter="updateTaskTitle"
+        @blur="updateTaskTitle"
         class="flex-1 p-5 text-2xl bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 placeholder-gray-500"
       />
       <div
@@ -35,93 +113,6 @@
   </div>
 </template>
 
-<script>
-import AddTask from "../components/AddTask.vue";
-import Task from "../components/Task.vue";
-import "flatpickr/dist/flatpickr.css";
-import { TrashIcon } from "@heroicons/vue/24/solid";
-import { useRoute } from "vue-router";
-import taskService from "@/services/taskService";
-
-export default {
-  components: { AddTask, Task, TrashIcon },
-
-  data() {
-    const route = useRoute();
-    return {
-      colors: ["red", "blue", "green", "yellow", "white"],
-      taskColor: route.query.color || "white",
-      selectedDate: null,
-      newTask: "",
-      taskTitle: route.query.title || "Untitled Task",
-      taskId: route.query.taskId,
-    };
-  },
-  setup() {
-    const route = useRoute();
-    const taskId = route.query.taskId;
-
-    const taskStore = useTaskStore();
-    const tasks = computed(() => taskStore.tasks);
-    onMounted(() => {
-      taskStore.fetchSubTasksByTaskId(taskId);
-    });
-    return { tasks };
-  },
-
-  methods: {
-    async updateTaskTitle() {
-      if (!this.taskId) {
-        console.warn("No taskId available for update");
-        return;
-      }
-      try {
-        const updatedData = {
-          title: this.taskTitle,
-          color: this.taskColor,
-        };
-        const response = await taskService.updateTask(this.taskId, updatedData);
-        console.log("Task updated successfully:", response.data);
-      } catch (error) {
-        console.error("Error updating task:", error);
-      }
-    },
-
-    async createTask() {
-      try {
-        const taskData = {
-          title: this.newTaskTitle,
-          color: "white",
-        };
-        const response = await taskService.createTask(taskData);
-        console.log("Task created successfully:", response.data);
-      } catch (error) {
-        console.error("Error creating task:", error);
-      }
-    },
-  },
-
-  handleClick(color) {
-    this.taskColor = color;
-    this.updateTaskTitle();
-  },
-
-  async removeTask() {
-    if (confirm("Are you sure you want to delete this task?", this.taskId)) {
-      try {
-        await taskService.deleteTask(this.taskId);
-        this.tasks = this.tasks.filter((task) => task.id !== this.taskId);
-        console.log("Task deleted successfully");
-
-        this.$router.push("/ToDoPage");
-      } catch (error) {
-        console.error("Error deleting task:", error);
-      }
-    }
-  },
-};
-</script>
-
 <style>
 div {
   overflow-y: auto;
@@ -130,7 +121,6 @@ div {
 div.cursor-pointer:hover {
   opacity: 0.8;
 }
-
 .bg-dotted-pattern {
   background-image: radial-gradient(
     circle,

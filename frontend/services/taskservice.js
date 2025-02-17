@@ -11,9 +11,11 @@ export default {
   getTasks() {
     return apiClient.get("/tasks");
   },
-  
-  createTask(data) {
-    return apiClient.post("/tasks", data);
+  getTaskByID(id) {
+    return apiClient.get(`/tasks/${id}`);
+  },
+  createTask() {
+    return apiClient.post("/tasks");
   },
   updateTask(id, data) {
     return apiClient.put(`/tasks/${id}`, data);
