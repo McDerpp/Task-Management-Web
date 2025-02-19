@@ -1,9 +1,8 @@
 <template>
-  <div class="overflow-hidden flex">
-    <!-- Sidebar -->
+  <div class="flex">
     <VerticalNavbar />
 
-    <main class="flex-1 bg-gray-50 min-h-screen relative">
+    <main class="flex-1 bg-gray-50 min-h-screen relative overflow-x-auto">
       <NuxtPage />
     </main>
   </div>

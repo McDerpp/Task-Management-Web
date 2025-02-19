@@ -18,7 +18,7 @@
           To Do List
         </NuxtLink>
       </li>
-      <!-- <li>
+      <li>
         <NuxtLink
           to="/"
           class="block w-full py-2 px-4 hover:bg-blue-600 rounded-md"
@@ -26,7 +26,7 @@
           Calendar
         </NuxtLink>
       </li>
-      <li>
+      <!-- <li>
         <NuxtLink
           to="/about"
           class="block w-full py-2 px-4 hover:bg-blue-600 rounded-md"
