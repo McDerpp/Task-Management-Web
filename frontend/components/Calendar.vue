@@ -2,7 +2,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/24/solid";
 import { ref, computed } from "vue";
 
-// Reactive states
 const currentMonth = ref(new Date().getMonth());
 const currentYear = ref(new Date().getFullYear());
 const monthNames = ref([
@@ -22,7 +21,6 @@ const monthNames = ref([
 const dayNames = ref(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]);
 const repeatCount = ref(6);
 
-// Computed properties
 const totalDays = computed(() => {
   return new Date(currentYear.value, currentMonth.value + 1, 0).getDate();
 });
@@ -138,159 +136,3 @@ const changeMonth = (step) => {
     </div>
   </div>
 </template>
-
-<!-- 
-<template>
-  <div class="flex-grow h-full mx-auto bg-white flex flex-col overflow-hidden">
-    <div class="flex items-center justify-between w-full mb-4 overflow-hidden">
-      <button @click="changeMonth(-1)" class="p-2">
-        <ChevronLeftIcon
-          class="w-6 h-6 text-gray-500 hover:text-gray-700 cursor-pointer"
-        />
-      </button>
-
-      <h2 class="text-2xl font-bold text-center">
-        {{ monthNames[currentMonth] }} {{ currentYear }}
-      </h2>
-
-      <button @click="changeMonth(1)" class="p-2">
-        <ChevronRightIcon
-          class="w-6 h-6 text-gray-500 hover:text-gray-700 cursor-pointer"
-        />
-      </button>
-    </div>
-
-    <div class="flex overflow-hidden">
-      <div class="w-full min-h-screen overflow-hidden">
-        <div class="overflow-auto xl:max-h-[900px]">
-          <table class="w-full table-fixed text-center">
-            <thead class="sticky top-0 bg-white z-20">
-              <tr>
-                <th
-                  v-for="(day, index) in repeatedDays"
-                  :key="index"
-                  class="border p-2 w-[100px]"
-                >
-                  <div class="flex flex-col items-center">
-                    <span class="text-sm text-gray-500">{{
-                      day === 0 ? null : index
-                    }}</span>
-                    <span>{{
-                      day === 0 ? null : repeatedDays[index - 1]
-                    }}</span>
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="indexHour in 26" :key="indexHour">
-                <td
-                  v-for="(day, index) in calendarDays[0]"
-                  :key="day.date"
-                  :class="[
-                    index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200',
-                    index === 0 ? 'sticky left-0 bg-white z-10' : '',
-                  ]"
-                  class="border-t-2 border-b-2 border-dashed border-gray-300 p-2 align-top text-left text-center"
-                >
-                  {{ index === 0 ? indexHour - 1 + ":00" : "" }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-<script>
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/24/solid";
-export default {
-  components: {
-    ChevronLeftIcon,
-    ChevronRightIcon,
-  },
-  data() {
-    let currentMonth = new Date().getMonth();
-    let currentYear = new Date().getFullYear();
-    let firstDay = new Date(currentYear, currentMonth, 1).getDay();
-    let totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-    return {
-      currentMonth: currentMonth,
-      currentYear: currentYear,
-      firstDay: firstDay,
-      totalDays: totalDays,
-      monthNames: [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ],
-      dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-      repeatCount: 6,
-    };
-  },
-
-  computed: {
-    calendarDays() {
-      console.log("total days -> ", this.totalDays);
-
-      let days = [];
-      let week = [];
-      for (let day = 1; day <= this.totalDays; day++) {
-        week.push({ date: day });
-      }
-      console.log("number of days ", week.length);
-
-      if (week.length) {
-        while (week.length < 7) {
-          week.push({ date: "" });
-        }
-        days.push(week);
-      }
-
-      return days;
-    },
-
-    repeatedDays() {
-      let dayN = Array.from(
-        { length: this.repeatCount * this.dayNames.length },
-        (_, i) => this.dayNames[i % this.dayNames.length]
-      );
-      dayN.splice(0, 6);
-      dayN.splice(-(dayN.length - this.totalDays));
-
-      return dayN;
-    },
-  },
-  methods: {
-    changeMonth(step) {
-      this.currentMonth += step;
-
-      if (this.currentMonth > 11) {
-        this.currentMonth = 0;
-        this.currentYear++;
-      } else if (this.currentMonth < 0) {
-        this.currentMonth = 11;
-        this.currentYear--;
-      }
-
-      // Recalculate totalDays after changing the month
-      this.totalDays = new Date(
-        this.currentYear,
-        this.currentMonth + 1,
-        0
-      ).getDate();
-    },
-  },
-};
-</script> -->

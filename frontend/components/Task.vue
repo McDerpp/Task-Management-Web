@@ -1,3 +1,82 @@
+<script setup>
+import FlatPickr from "vue-flatpickr-component";
+import { useTaskStore } from "../stores/taskStore";
+import { XCircleIcon } from "@heroicons/vue/24/solid";
+import { ClockIcon } from "@heroicons/vue/24/solid";
+import subtaskService from "../services/subtaskService";
+
+const props = defineProps({
+  initialTask: {
+    type: String,
+    default: "Add a task",
+  },
+  initialCheck: {
+    type: [Boolean, Number],
+    default: 0,
+  },
+  initialTime: {
+    type: String,
+    default: null,
+  },
+  taskId: {
+    type: Number,
+    default: 0,
+  },
+});
+
+const newTask = ref(props.initialTask);
+const isCheckChange = ref(props.initialCheck);
+const newDate = ref(props.initialTime);
+
+const handleChange = async (event) => {
+  const checkedValue = event.target.checked;
+
+  const updateTaskData = {
+    completed: checkedValue,
+    datetime: newDate.value,
+  };
+
+  const response = await subtaskService.updateSubTask(
+    props.taskId,
+    updateTaskData
+  );
+  console.log(response);
+};
+
+const removeTask = async () => {
+  if (confirm("Are you sure you want to delete this task?")) {
+    try {
+      await subtaskService.deleteSubTask(props.taskId);
+
+      const taskStore = useTaskStore();
+      taskStore.removeTask(props.taskId);
+
+      console.log("Task deleted successfully");
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  }
+};
+
+const updateTask = async () => {
+  const taskStore = useTaskStore();
+
+  const updateTaskData = {
+    title: newTask.value,
+    completed: isCheckChange.value,
+    datetime: newDate.value,
+  };
+
+  const response = await subtaskService.updateSubTask(
+    props.taskId,
+    updateTaskData
+  );
+  console.log(response);
+
+  taskStore.updateTask(props.taskId, newTask.value);
+};
+</script>
+
 <template>
   <div class="create-new flex flex-wrap items-center gap-4 mb-8">
     <input
@@ -33,92 +112,3 @@
     />
   </div>
 </template>
-
-<script>
-import FlatPickr from "vue-flatpickr-component";
-import { useTaskStore } from "../stores/taskStore";
-import { XCircleIcon } from "@heroicons/vue/24/solid";
-import { ClockIcon } from "@heroicons/vue/24/solid";
-import subtaskService from "../services/subtaskService";
-
-export default {
-  components: { FlatPickr, XCircleIcon, ClockIcon },
-  props: {
-    initialTask: {
-      type: String,
-      default: "Add a task",
-    },
-    initialCheck: {
-      type: [Boolean, Number],
-      default: 0,
-    },
-    initialTime: {
-      type: String,
-      default: null,
-    },
-    taskId: {
-      type: Number,
-      default: 0,
-    },
-  },
-
-  data() {
-    return {
-      newTask: this.initialTask,
-      isCheckChange: Boolean(this.initialCheck),
-      newDate: this.initialTime ? new Date(this.initialTime) : null,
-    };
-  },
-
-  methods: {
-    async handleChange(event) {
-      const checkedValue = event.target.checked;
-
-      const updateTaskData = {
-        completed: checkedValue,
-        datetime: this.newDate,
-      };
-
-      const response = await subtaskService.updateSubTask(
-        this.taskId,
-        updateTaskData
-      );
-      console.log(response);
-    },
-    async removeTask() {
-      if (confirm("Are you sure you want to delete this task?")) {
-        try {
-     
-          await subtaskService.deleteSubTask(this.taskId);
-
-
-          const taskStore = useTaskStore();
-          taskStore.removeTask(this.taskId);
-
-          console.log("Task deleted successfully");
-        } catch (error) {
-          console.error("Error deleting task:", error);
-        }
-      }
-    },
-
-    async updateTask() {
-      const taskStore = useTaskStore();
-
-      const updateTaskData = {
-        title: this.newTask,
-        completed: this.isCheckChange,
-        datetime: this.newDate,
-      };
-
-      const response = await subtaskService.updateSubTask(
-        this.taskId,
-        updateTaskData
-      );
-      console.log(response);
-
-      taskStore.updateTask(this.taskId, this.newTask);
-    },
-  },
-};
-</script>
