@@ -25,6 +25,7 @@ onMounted(async () => {
   if (taskId.value) {
     try {
       const task = await taskStore.fetchTask(taskId.value);
+      taskStore.sortTasksByDate();
       taskColor.value = task.color;
       taskTitle.value = task.title;
       taskID.value = task.id;
@@ -101,7 +102,7 @@ const removeTask = async () => {
     </div>
     <div class="overflow-hidden">
       <Task
-        v-for="(task, index) in tasks"
+        v-for="(task, index) in taskStore.tasks"
         :key="index"
         :initialTask="task.title"
         :initialTime="task.datetime"

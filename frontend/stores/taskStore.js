@@ -3,14 +3,10 @@ import subtaskService from "../services/subtaskService";
 import taskservice from "../services/taskservice";
 export const useTaskStore = defineStore("taskStore", {
   state: () => ({
-    tasks: [
-      // { content: "Task 1", dateTime: "2025-02-10 10:00" },
-      // { content: "Task 2", dateTime: null },
-    ],
+    tasks: [],
   }),
 
   actions: {
-    // Add a new task
     addTask(taskContent, isDone = false, dateTime = null) {
       this.tasks.unshift({
         id: Date.now(),
@@ -39,14 +35,28 @@ export const useTaskStore = defineStore("taskStore", {
     },
 
     sortTasksByDate() {
-      this.tasks.sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
+      this.tasks = this.tasks.sort((a, b) => {
+        if (!a.datetime) return 1;
+        if (!b.datetime) return -1;
+        return new Date(a.datetime) - new Date(b.datetime);
+      });
+    },
+
+    sortTasksByTitle() {
+      this.tasks = [...this.tasks].sort((a, b) =>
+        a.title.localeCompare(b.title)
+      );
+    },
+
+    sortTasksByCompleted() {
+      this.tasks = [...this.tasks].sort((a, b) => a.completed - b.completed);
     },
 
     async fetchTask(taskId) {
       try {
         const response = await taskservice.getTaskByID(taskId);
         this.tasks = response.data.sub_tasks;
-        console.log(response.data);
+        console.log("this.tasks -> ", this.tasks);
         return response.data;
       } catch (error) {
         console.error("Error fetching subtasks for taskId:", error);

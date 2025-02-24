@@ -54,7 +54,9 @@ const repeatedDays = computed(() => {
   );
 
   dayN.splice(0, 6);
-  dayN.splice(-(dayN.length - totalDays.value));
+
+  dayN.splice(-(dayN.length - totalDays.value - 1));
+  console.log("dayN --> ", dayN);
 
   return dayN;
 });
@@ -106,7 +108,7 @@ const changeMonth = (step) => {
                 >
                   <div class="flex flex-col items-center">
                     <span class="text-sm text-gray-500">{{
-                      day === 0 ? null : index
+                      index === 0 ? null : index
                     }}</span>
                     <span>{{
                       day === 0 ? null : repeatedDays[index - 1]
@@ -118,7 +120,7 @@ const changeMonth = (step) => {
             <tbody>
               <tr v-for="indexHour in 26" :key="indexHour">
                 <td
-                  v-for="(day, index) in calendarDays[0]"
+                  v-for="(day, index) in repeatedDays"
                   :key="day.date"
                   :class="[
                     index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200',

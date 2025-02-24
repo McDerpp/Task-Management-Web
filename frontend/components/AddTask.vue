@@ -1,3 +1,60 @@
+<script setup>
+import FlatPickr from "vue-flatpickr-component";
+import { useTaskStore } from "../stores/taskStore";
+import subtaskService from "../services/subtaskService";
+import { ref } from "vue";
+
+const newTask = ref("");
+const date = ref(null);
+const isChecked = ref(false);
+const taskStore = useTaskStore();
+
+const props = defineProps({
+  taskId: {
+    type: String,
+    required: true,
+  },
+});
+
+const handleBlurAddTask = () => {
+  console.log("Task input blurred!");
+};
+
+const addTask = async () => {
+  if (!newTask.value.trim()) {
+    alert("Please enter a task!");
+    return;
+  }
+
+  try {
+    console.log("Task ID:", props.taskId);
+
+    const taskData = {
+      title: newTask.value,
+      completed: isChecked.value,
+      datetime: date.value,
+      task_id: props.taskId,
+    };
+
+    const response = await subtaskService.createSubTask(taskData);
+    console.log("Task added successfully:", response.data);
+
+    taskStore.addTask(
+      response.data.title,
+      response.data.completed,
+      response.data.datetime
+    );
+
+    // Reset input fields
+    newTask.value = "";
+    date.value = null;
+    isChecked.value = false;
+  } catch (error) {
+    console.error("Error adding task:", error);
+  }
+};
+</script>
+
 <template>
   <div class="create-new flex flex-wrap items-center gap-4 mb-8">
     <input
@@ -23,69 +80,3 @@
     </button>
   </div>
 </template>
-
-<script>
-import FlatPickr from "vue-flatpickr-component";
-import { useTaskStore } from "../stores/taskStore"; 
-import subtaskService from "../services/subtaskService";
-
-export default {
-  components: {
-    FlatPickr,
-  },
-  data() {
-    return {
-      newTask: "",
-      date: null,
-      isChecked: false,
-    };
-  },
-  props: {
-    taskId: {
-      type: String,
-      required: true,
-    },
-  },
-  methods: {
-    handleBlurAddTask() {
-      console.log("Task input blurred!");
-    },
-    async addTask() {
-      if (!this.newTask.trim()) {
-        alert("Please enter a task!");
-        return;
-      }
-
-      try {
-        console.log("Task ID:", this.taskId);
-
-        const taskData = {
-          title: this.newTask,
-          completed: this.isChecked,
-          datetime: this.date,
-          task_id: this.taskId,
-        };
-
-        const response = await subtaskService.createSubTask(taskData);
-        console.log("Task added successfully:", response.data);
-
-        const taskStore = useTaskStore();
-        taskStore.addTask(
-          response.data.title,
-          response.data.completed,
-          response.data.datetime
-        );
-
-
-        this.newTask = "";
-        this.date = null;
-        this.isChecked = false;
-      } catch (error) {
-        console.error("Error adding task:", error);
-      }
-    },
-  },
-};
-</script>
-
-<style scoped></style>
