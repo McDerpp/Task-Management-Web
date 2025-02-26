@@ -9,8 +9,31 @@ const date = ref(null);
 const isChecked = ref(false);
 const taskStore = useTaskStore();
 
+const taskBG = ref("");
+
+onMounted(() => {
+  console.log("ITS -> ", props.color);
+
+  if (props.color === "red") {
+    taskBG.value = "bg-red-500";
+  }
+  if (props.color === "blue") {
+    taskBG.value = "bg-blue-500";
+  }
+  if (props.color === "green") {
+    taskBG.value = "bg-green-500";
+  }
+  if (props.color === "yellow") {
+    taskBG.value = "bg-yellow-500";
+  }
+});
+
 const props = defineProps({
   taskId: {
+    type: String,
+    required: true,
+  },
+  color: {
     type: String,
     required: true,
   },
@@ -56,25 +79,39 @@ const addTask = async () => {
 </script>
 
 <template>
-  <div class="create-new flex flex-wrap items-center gap-4 mb-8">
+  <div
+    :class="[
+      'w-1/2',
+      'flex',
+      'flex-wrap',
+      'items-center',
+      'gap-4',
+      'mb-2',
+      'p-3',
+      'pt-1',
+      'pb-1',
+      taskBG,
+      'rounded-md',
+    ]"
+  >
     <input
       type="text"
       v-model="newTask"
       placeholder="Add a new task"
       @blur="handleBlurAddTask"
-      class="flex-1 p-3 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 placeholder-gray-500 max-w-full"
+      class="flex-1 p-3 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 placeholder-white max-w-full"
     />
     <div class="w-full sm:w-auto">
       <flat-pickr
         placeholder="Add time (OPTIONAL)"
         v-model="date"
         :config="{ enableTime: true }"
-        class="p-3 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 placeholder-gray-500"
+        class="p-3 bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 placeholder-white"
       />
     </div>
     <button
       @click="addTask"
-      class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none"
+      class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-orange-600 focus:outline-none"
     >
       Add Task
     </button>

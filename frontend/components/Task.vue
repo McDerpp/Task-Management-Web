@@ -22,11 +22,34 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  color: {
+    type: String,
+    required: true,
+  },
 });
 
 const newTask = ref(props.initialTask);
 const isCheckChange = ref(props.initialCheck);
 const newDate = ref(props.initialTime);
+
+const taskBG = ref("");
+
+onMounted(() => {
+  console.log("ITS -> ", props.color);
+
+  if (props.color === "red") {
+    taskBG.value = "bg-red-500";
+  }
+  if (props.color === "blue") {
+    taskBG.value = "bg-blue-500";
+  }
+  if (props.color === "green") {
+    taskBG.value = "bg-green-500";
+  }
+  if (props.color === "yellow") {
+    taskBG.value = "bg-yellow-500";
+  }
+});
 
 const handleChange = async (event) => {
   const checkedValue = event.target.checked;
@@ -78,7 +101,22 @@ const updateTask = async () => {
 </script>
 
 <template>
-  <div class="create-new flex flex-wrap items-center gap-4 mb-8">
+  <div
+    :class="[
+      'w-1/2',
+      'flex',
+      'flex-wrap',
+      'items-center',
+      'gap-4',
+      'mb-2',
+      'p-3',
+      'pt-1',
+      'pb-1',
+
+      taskBG,
+      'rounded-md',
+    ]"
+  >
     <input
       v-model="isCheckChange"
       type="checkbox"
@@ -89,25 +127,23 @@ const updateTask = async () => {
 
     <input
       type="text"
+      maxlength="55"
       v-model="newTask"
       @blur="updateTask"
-      class="flex-1 p-3 bg-transparent border-gray-300 focus:outline-none focus:border-blue-500 placeholder-black max-w-full focus:border-b-2 border-b"
+      class="flex-1 w-2/3 p-2 bg-transparent border-gray-300 focus:outline-none focus:border-blue-500 placeholder-black max-w-full focus:border-b-1 border-b"
     />
 
-    <ClockIcon
-      class="w-8 h-8 text-gray-500 cursor-pointer hover:text-red-500"
+    <ClockIcon class="w-6 h-6 text-gray-500 cursor-pointer" />
+
+    <flat-pickr
+      v-model="newDate"
+      :config="{ enableTime: true, dateFormat: 'Y-m-d H:i:S' }"
+      placeholder="Select Date & Time"
+      class="bg-transparent border-gray-300 text-center"
     />
-    <div class="w-full sm:w-auto">
-      <flat-pickr
-        v-model="newDate"
-        :config="{ enableTime: true, dateFormat: 'Y-m-d H:i:S' }"
-        placeholder="Select Date & Time"
-        class="p-3 bg-transparent border-gray-300"
-      />
-    </div>
 
     <XCircleIcon
-      class="w-8 h-8 text-gray-500 cursor-pointer hover:text-red-500"
+      class="w-6 h-6 text-gray-500 cursor-pointer hover:text-red-500"
       @click="removeTask"
     />
   </div>

@@ -17,18 +17,24 @@ const taskId = ref(route.query.taskId);
 const tasks = computed(() => taskStore.tasks);
 const colors = ["red", "blue", "green", "yellow"];
 
-const taskColor = ref("white");
+const taskColor = ref("blue");
 const taskTitle = ref("Task Title Here");
 const taskID = ref(69);
+
+const isCheckedShowDone = ref(false);
+const isCheckedShowLate = ref(false);
+const isCheckedShowFinished = ref(false);
 
 onMounted(async () => {
   if (taskId.value) {
     try {
       const task = await taskStore.fetchTask(taskId.value);
-      taskStore.sortTasksByDate();
+      taskStore.sortTasksByTitle();
       taskColor.value = task.color;
       taskTitle.value = task.title;
       taskID.value = task.id;
+
+      console.log("taskColor.value -> ", taskColor.value);
     } catch (error) {
       console.error("Error fetching task: ", error);
     }
@@ -89,6 +95,7 @@ const removeTask = async () => {
         @blur="updateTaskTitle"
         class="flex-1 p-5 text-2xl bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 placeholder-gray-500"
       />
+
       <div
         v-for="(color, index) in colors"
         :key="index"
@@ -96,10 +103,49 @@ const removeTask = async () => {
         :class="`w-8 h-8 bg-${color}-500 rounded-full border-2 border-gray-200 cursor-pointer hover:bg-${color}-100 active:scale-90`"
       ></div>
       <TrashIcon
-        class="w-8 h-8 text-gray-500 cursor-pointer hover:text-red-500"
+        class="w-5 h-5 text-gray-500 cursor-pointer hover:text-red-500"
         @click="removeTask"
       />
     </div>
+    <div class="flex flex-row gap-4">
+      <select v-model="selectedOption" class="border p-2 rounded">
+        <option value="">Select an option</option>
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        <option value="option3">Option 3</option>
+      </select>
+
+      <label for="showDone" class="flex items-center space-x-2 cursor-pointer">
+        <input
+          for="showDone"
+          type="checkbox"
+          v-model="isCheckedShowDone"
+          class="w-5 h-5 text-blue-500 border-gray-300 focus:ring-blue-500"
+        />
+        <span class="text-gray-500"> done</span>
+      </label>
+
+      <label for="showDone" class="flex items-center space-x-2 cursor-pointer">
+        <input
+          for="showDone"
+          type="checkbox"
+          v-model="isCheckedShowLate"
+          class="w-5 h-5 text-blue-500 border-gray-300 focus:ring-blue-500"
+        />
+        <span class="text-gray-500"> Late</span>
+      </label>
+
+      <label for="showDone" class="flex items-center space-x-2 cursor-pointer">
+        <input
+          for="showDone"
+          type="checkbox"
+          v-model="isCheckedShowFinished"
+          class="w-5 h-5 text-blue-500 border-gray-300 focus:ring-blue-500"
+        />
+        <span class="text-gray-500"> Finished</span>
+      </label>
+    </div>
+
     <div class="overflow-hidden">
       <Task
         v-for="(task, index) in taskStore.tasks"
@@ -108,9 +154,10 @@ const removeTask = async () => {
         :initialTime="task.datetime"
         :initialCheck="task.completed"
         :taskId="task.id"
+        :color="taskColor"
       />
     </div>
-    <AddTask :taskId="taskId" />
+    <AddTask :taskId="taskId" :color="taskColor" />
   </div>
 </template>
 

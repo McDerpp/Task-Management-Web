@@ -33,9 +33,9 @@ export const useTaskStore = defineStore("taskStore", {
     clearCompletedTasks() {
       this.tasks = this.tasks.filter((task) => !task.done);
     },
-
     sortTasksByDate() {
-      this.tasks = this.tasks.sort((a, b) => {
+      console.log("sorting date!");
+      this.tasks = [...this.tasks].sort((a, b) => {
         if (!a.datetime) return 1;
         if (!b.datetime) return -1;
         return new Date(a.datetime) - new Date(b.datetime);
@@ -43,6 +43,7 @@ export const useTaskStore = defineStore("taskStore", {
     },
 
     sortTasksByTitle() {
+      console.log("sorting title!");
       this.tasks = [...this.tasks].sort((a, b) =>
         a.title.localeCompare(b.title)
       );
