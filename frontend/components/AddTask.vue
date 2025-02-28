@@ -80,19 +80,7 @@ const addTask = async () => {
 
 <template>
   <div
-    :class="[
-      'w-1/2',
-      'flex',
-      'flex-wrap',
-      'items-center',
-      'gap-4',
-      'mb-2',
-      'p-3',
-      'pt-1',
-      'pb-1',
-      taskBG,
-      'rounded-md',
-    ]"
+    :class="`flex flex-wrap items-center gap-4 mb-2 p-3 pt-1 pb-1 bg-${props.color}-500 rounded-md`"
   >
     <input
       type="text"
@@ -111,7 +99,7 @@ const addTask = async () => {
     </div>
     <button
       @click="addTask"
-      class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-orange-600 focus:outline-none"
+      class="px-4 py-2 bg-yellow-300 text-white rounded-lg hover:bg-orange-600 focus:outline-none"
     >
       Add Task
     </button>

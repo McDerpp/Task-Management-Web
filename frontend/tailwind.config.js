@@ -10,7 +10,7 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar")],
   safelist: [
     {
       pattern:

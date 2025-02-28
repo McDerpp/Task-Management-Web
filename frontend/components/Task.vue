@@ -6,6 +6,10 @@ import { ClockIcon } from "@heroicons/vue/24/solid";
 import subtaskService from "../services/subtaskService";
 
 const props = defineProps({
+  isSelected: {
+    type: Boolean,
+    default: false,
+  },
   initialTask: {
     type: String,
     default: "Add a task",
@@ -33,23 +37,6 @@ const isCheckChange = ref(props.initialCheck);
 const newDate = ref(props.initialTime);
 
 const taskBG = ref("");
-
-onMounted(() => {
-  console.log("ITS -> ", props.color);
-
-  if (props.color === "red") {
-    taskBG.value = "bg-red-500";
-  }
-  if (props.color === "blue") {
-    taskBG.value = "bg-blue-500";
-  }
-  if (props.color === "green") {
-    taskBG.value = "bg-green-500";
-  }
-  if (props.color === "yellow") {
-    taskBG.value = "bg-yellow-500";
-  }
-});
 
 const handleChange = async (event) => {
   const checkedValue = event.target.checked;
@@ -102,20 +89,9 @@ const updateTask = async () => {
 
 <template>
   <div
-    :class="[
-      'w-1/2',
-      'flex',
-      'flex-wrap',
-      'items-center',
-      'gap-4',
-      'mb-2',
-      'p-3',
-      'pt-1',
-      'pb-1',
-
-      taskBG,
-      'rounded-md',
-    ]"
+    :class="`flex flex-wrap items-center gap-4 mb-2 p-3 pt-1 pb-1 bg-${
+      props.color
+    }-${props.isSelected ? '300' : '500'} rounded-md`"
   >
     <input
       v-model="isCheckChange"

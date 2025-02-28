@@ -24,6 +24,9 @@ const taskID = ref(69);
 const isCheckedShowDone = ref(false);
 const isCheckedShowLate = ref(false);
 const isCheckedShowFinished = ref(false);
+const taskDescription = ref("");
+
+const isSelectedTask = ref(null);
 
 onMounted(async () => {
   if (taskId.value) {
@@ -84,9 +87,9 @@ const removeTask = async () => {
 
 <template>
   <div
-    :class="`p-5 bg-${taskColor}-500 bg-opacity-35 h-screen overflow-y-auto`"
+    :class="`p-5 bg-${taskColor}-500 bg-opacity-35 h-screen overflow-y-auto flex flex-col`"
   >
-    <div class="pb-10 flex items-center space-x-4">
+    <div class="flex flex-wrap items-center overflow-hidden gap-4">
       <input
         type="text"
         v-model="taskTitle"
@@ -96,6 +99,7 @@ const removeTask = async () => {
         class="flex-1 p-5 text-2xl bg-transparent border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 placeholder-gray-500"
       />
 
+      <!-- page color switch -->
       <div
         v-for="(color, index) in colors"
         :key="index"
@@ -107,6 +111,8 @@ const removeTask = async () => {
         @click="removeTask"
       />
     </div>
+
+    <!-- Filters -->
     <div class="flex flex-row gap-4">
       <select v-model="selectedOption" class="border p-2 rounded">
         <option value="">Select an option</option>
@@ -145,19 +151,31 @@ const removeTask = async () => {
         <span class="text-gray-500"> Finished</span>
       </label>
     </div>
+    <div class="flex flex-nowrap gap-4 h-full">
+      <div :class="`w-1/2 bg-${taskColor}-300 p-2 rounded-lg`">
+        <AddTask :taskId="taskId" :color="taskColor" />
 
-    <div class="overflow-hidden">
-      <Task
-        v-for="(task, index) in taskStore.tasks"
-        :key="index"
-        :initialTask="task.title"
-        :initialTime="task.datetime"
-        :initialCheck="task.completed"
-        :taskId="task.id"
-        :color="taskColor"
-      />
+        <Task
+          v-for="(task, index) in taskStore.tasks"
+          :key="`${index}-${taskColor}`"
+          :initialTask="task.title"
+          :initialTime="task.datetime"
+          :initialCheck="task.completed"
+          :taskId="task.id"
+          :color="taskColor"
+          :isSelected="task.id === (isSelectedTask ? isSelectedTask.value : null)"
+          @click="isSelectedTask.value = task.id"
+        />
+      </div>
+      <div
+        :class="`bg-${taskColor}-300 w-1/2 rounded-lg overflow-hidden border-2`"
+      >
+        <textarea
+          name="Test"
+          class="w-full h-full resize-none rounded-lg p-5 bg-transparent"
+        ></textarea>
+      </div>
     </div>
-    <AddTask :taskId="taskId" :color="taskColor" />
   </div>
 </template>
 
