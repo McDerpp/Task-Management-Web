@@ -24,7 +24,7 @@ const taskID = ref(69);
 const isCheckedShowDone = ref(false);
 const isCheckedShowLate = ref(false);
 const isCheckedShowFinished = ref(false);
-const taskDescription = ref("");
+// const taskDescription = ref("");
 
 const isSelectedTask = ref(null);
 
@@ -82,6 +82,11 @@ const removeTask = async () => {
       console.error("Error deleting task:", error);
     }
   }
+};
+
+const handleTaskClick = (task) => {
+  isSelectedTask.value = task;
+  console.log("Task clicked:", task);
 };
 </script>
 
@@ -163,17 +168,12 @@ const removeTask = async () => {
           :initialCheck="task.completed"
           :taskId="task.id"
           :color="taskColor"
-          :isSelected="task.id === (isSelectedTask ? isSelectedTask.value : null)"
-          @click="isSelectedTask.value = task.id"
+          :isSelected="task.id === isSelectedTask ? true : false"
+          @task-click="handleTaskClick"
         />
       </div>
-      <div
-        :class="`bg-${taskColor}-300 w-1/2 rounded-lg overflow-hidden border-2`"
-      >
-        <textarea
-          name="Test"
-          class="w-full h-full resize-none rounded-lg p-5 bg-transparent"
-        ></textarea>
+      <div :class="`w-1/2 bg-${taskColor}-300 p-2 rounded-lg flex flex-col `">
+        <taskDescription :color="taskColor" />
       </div>
     </div>
   </div>
