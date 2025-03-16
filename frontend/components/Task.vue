@@ -32,7 +32,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["task-click"]);
+// const emit = defineEmits(["task-click"]);
 
 const newTask = ref(props.initialTask);
 const isCheckChange = ref(props.initialCheck);
@@ -69,28 +69,6 @@ const removeTask = async () => {
     }
   }
 };
-
-const updateTask = async () => {
-  const taskStore = useTaskStore();
-
-  const updateTaskData = {
-    title: newTask.value,
-    completed: isCheckChange.value,
-    datetime: newDate.value,
-  };
-
-  const response = await subtaskService.updateSubTask(
-    props.taskId,
-    updateTaskData
-  );
-  console.log("test output -> ", response);
-
-  taskStore.updateTask(props.taskId, newTask.value);
-};
-
-const showTest = () => {
-  emit("task-click", props.taskId);
-};
 </script>
 
 <template>
@@ -109,25 +87,10 @@ const showTest = () => {
       @click="showTest"
     />
 
-    <!-- <input
-      type="text"
-      maxlength="55"
-      v-model="newTask"
-      @blur="updateTask"
-      @click="showTest"
-      class="flex-1 w-2/3 p-2 bg-transparent border-gray-300 focus:outline-none focus:border-blue-500 placeholder-black max-w-full focus:border-b-1 border-b"
-    /> -->
     <span class="flex-1 inline-flex">{{ newTask }}</span>
 
     <ClockIcon class="w-6 h-6 text-gray-500 cursor-pointer" />
 
-    <!-- <flat-pickr
-      v-model="newDate"
-      :config="{ enableTime: true, dateFormat: 'Y-m-d H:i:S' }"
-      placeholder="Select Date & Time"
-      class="bg-transparent border-gray-300 text-center"
-      @click="showTest"
-    /> -->
     <span class="flex-1 inline-flex">{{ newDate }}</span>
 
     <XCircleIcon

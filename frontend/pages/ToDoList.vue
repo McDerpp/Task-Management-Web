@@ -24,7 +24,10 @@ const taskID = ref(69);
 const isCheckedShowDone = ref(false);
 const isCheckedShowLate = ref(false);
 const isCheckedShowFinished = ref(false);
-// const taskDescription = ref("");
+
+const selectedTaskName = ref("testsetset");
+const selectedTaskDateTime = ref(null);
+const selectedTaskDescription = ref(null);
 
 const isSelectedTask = ref(null);
 
@@ -47,6 +50,8 @@ onMounted(async () => {
   }
 });
 
+const changeTaskSelection = () => {};
+
 const updateTaskTitle = async () => {
   if (!taskId.value) {
     console.warn("No taskId available for update");
@@ -62,6 +67,24 @@ const updateTaskTitle = async () => {
   } catch (error) {
     console.error("Error updating task:", error);
   }
+};
+
+const updateSubTask = async (title, datetime, description, completed) => {
+  const taskStore = useTaskStore();
+
+  const updateTaskData = {
+    title: newTask.value,
+    completed: isCheckChange.value,
+    datetime: newDate.value,
+  };
+
+  const response = await subtaskService.updateSubTask(
+    props.taskId,
+    updateTaskData
+  );
+  console.log("test output -> ", response);
+
+  taskStore.updateTask(props.taskId, newTask.value);
 };
 
 const handleClick = (color) => {
@@ -84,9 +107,13 @@ const removeTask = async () => {
   }
 };
 
-const handleTaskClick = (task) => {
+const handleTaskClick = (task, taskName, taskDateTime, taskDescription) => {
   isSelectedTask.value = task;
-  console.log("Task clicked:", task);
+  selectedTaskName.value = taskName;
+  selectedTaskDateTime.value = taskDateTime;
+  selectedTaskDescription.value = taskDescription;
+
+  console.log("Task clicked:", taskName);
 };
 </script>
 
@@ -168,12 +195,20 @@ const handleTaskClick = (task) => {
           :initialCheck="task.completed"
           :taskId="task.id"
           :color="taskColor"
+          :description="test"
           :isSelected="task.id === isSelectedTask ? true : false"
-          @task-click="handleTaskClick"
+          @click="
+            () => handleTaskClick(task.id, task.title, task.datetime, 'test')
+          "
         />
       </div>
       <div :class="`w-1/2 bg-${taskColor}-300 p-2 rounded-lg flex flex-col `">
-        <taskDescription :color="taskColor" />
+        <taskDescription
+          :color="taskColor"
+          :name="selectedTaskName"
+          :initialTime="selectedTaskDateTime"
+          @updateSubTask="updateSubTask"
+        />
       </div>
     </div>
   </div>
